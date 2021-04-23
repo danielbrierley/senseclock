@@ -1,11 +1,22 @@
 #!/usr/bin/env python
 import time
 
+def angleSimplify(angle):
+    while angle >= 360:
+        angle -= 360
+    while angle < 0:
+        angle += 360
+    return angle
+
 now = time.localtime()
 
-hour = ((now.tm_hour/12)-(now.tm_hour//12))*12
+hourAnglePerc = now.tm_hour/12
+minuteAnglePerc = now.tm_min/60
 
-hourAngle = (hour/12)*360
-minuteAngle = (now.tm_min/60)*360
-print(hourAngle)
-print(minuteAngle)
+hourAngle = hourAnglePerc*360
+minuteAngle = minuteAnglePerc*360
+
+hourAngle += minuteAnglePerc*(360/12)
+
+print(angleSimplify(hourAngle))
+print(angleSimplify(minuteAngle))
