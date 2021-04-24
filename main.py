@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_hat import SenseHat
+from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
+from digitalClock import digitalClock
 
 #TODO
 #1. Clean up and optimise drawLine()
@@ -16,7 +17,8 @@ BLACK = [0,0,0]
 RED = BLACK
 
 selected = 0
-limits = [0,0]
+limit = 1
+screen = 0
 
 def getInput():
     global selected
@@ -25,13 +27,13 @@ def getInput():
         if event.action == 'pressed':
             if event.direction == 'left':
                 selected -= 1
-                if selected < limits[0]:
-                    selected = limits[1]
+                if selected < 0:
+                    selected = limit
                 print(selected)
             if event.direction == 'right':
                 selected += 1
-                if selected > limits[1]:
-                    selected = limits[0]
+                if selected > limit:
+                    selected = 0
                 print(selected)
 
 def main():
@@ -45,6 +47,8 @@ def main():
 
         if selected == 0:
             pixels = drawClock(pixels)
+        if selected == 1:
+            pixels = digitalClock(pixels,screen)
             
         sense.set_pixels(pixels)
         
@@ -54,8 +58,10 @@ def main():
             sense.mainloop()
         except AttributeError: #Real sense hat or emu
             pass
+
         
-        time.sleep(.1)
+        
+        time.sleep(.01)
     
     
 
