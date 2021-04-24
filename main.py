@@ -18,10 +18,9 @@ RED = BLACK
 
 selected = 0
 limit = 1
-screen = 0
 
 def getInput():
-    global selected
+    global selected, screen, prevTime
     for event in sense.stick.get_events():
         #print("The joystick was {} {}".format(event.action, event.direction))
         if event.action == 'pressed':
@@ -29,18 +28,26 @@ def getInput():
                 selected -= 1
                 if selected < 0:
                     selected = limit
+                screen = 0
+                prevTime = [time.localtime().tm_sec+x for x in range(2)]
                 print(selected)
             if event.direction == 'right':
                 selected += 1
                 if selected > limit:
                     selected = 0
+                screen = 0
+                prevTime = [time.localtime().tm_sec+x for x in range(2)]
                 print(selected)
 
 def main():
+    global screen, maxScreen, prevTime
     #now = time.localtime()
     #h,m = getClockAngles(now)
     #print(h)
     #print(m)
+    screen = 0
+    maxScreen = 1
+    prevTime = [time.localtime().tm_sec+x for x in range(2)]
 
     while True:
         pixels = [[0,0,0] for x in range(64)]
@@ -53,6 +60,12 @@ def main():
         sense.set_pixels(pixels)
         
         getInput()
+
+        if not time.localtime().tm_sec in prevTime:
+            prevTime = [time.localtime().tm_sec+x for x in range(2)]
+            screen += 1
+            if screen > maxScreen:
+                screen = 0
         
         try: #Pygame sense emu
             sense.mainloop()

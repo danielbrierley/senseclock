@@ -82,8 +82,8 @@ def displayNumber(pixels,number,pos):
 def digitalClock(pixels,screen):
     now = time.localtime()
 
-    if screen:
-        pixels = displayNumber(pixels,now.tm_min,[0,1])
+    if screen == 1:
+        pixels = displayNumber(pixels,now.tm_min,[1,2])
     else:
         pixels = displayNumber(pixels,now.tm_hour,[0,1])
     return pixels
