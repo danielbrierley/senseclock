@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_emu_pygame import SenseHat
+from sense_hat import SenseHat
 
 #TODO
 #1. Clean up and optimise drawLine()
@@ -11,6 +11,12 @@ YELLOW = [255,255,0]
 RED = [255,0,0]
 BLUE = [0,0,255]
 ORANGE = [255,127,0]
+BLACK = [0,0,0]
+RED = BLACK
+sense = SenseHat()
+
+selected = 0
+limits = [0,0]
 
 def angleSimplify(angle):
     while angle >= 360:
@@ -35,7 +41,7 @@ def getClockAngles(now):
 
 def drawLine(pixels, colour, width, angle, bounds=[range(1,8),range(7)]):
     start = (4,3)
-    angle = round(angleSimplify(angle))
+    angle = angleSimplify(round(angle))
     #width = 3
     if angle in range(45):
         t = tan(radians(angle))
@@ -98,7 +104,49 @@ def drawLine(pixels, colour, width, angle, bounds=[range(1,8),range(7)]):
             pass
     return pixels
         
+def drawClock(pixels):
+    for y in range(8):
+        pixels[y*8] = RED
+    for x2 in range(8):
+        pixels[(y*8)+x2] = RED
+
+    now = time.localtime()
+    h,m = getClockAngles(now)
     
+    pixels = drawLine(pixels, BLUE, 3, h)
+    pixels = drawLine(pixels, YELLOW, 4, m)
+    
+    pixels[(3*8)+4] = ORANGE
+
+    return pixels
+
+def testClock():
+    for x in range(0,360):
+        pixels = [[0,0,0] for x in range(64)]
+        for y in range(8):
+            pixels[y*8] = RED
+        for x2 in range(8):
+            pixels[(y*8)+x2] = RED
+        pixels = drawLine(pixels, BLUE, 3, x+90)
+        pixels = drawLine(pixels, YELLOW, 4, x)
+        sense.set_pixels(pixels)
+        time.sleep(0.01)
+
+def getInput():
+    global selected
+    for event in sense.stick.get_events():
+        #print("The joystick was {} {}".format(event.action, event.direction))
+        if event.action == 'pressed':
+            if event.direction == 'left':
+                selected -= 1
+                if selected < limits[0]:
+                    selected = limits[1]
+                print(selected)
+            if event.direction == 'right':
+                selected += 1
+                if selected > limits[1]:
+                    selected = limits[0]
+                print(selected)
 
 def main():
     #now = time.localtime()
@@ -106,33 +154,21 @@ def main():
     #print(h)
     #print(m)
 
-    sense = SenseHat()
-##    for x in range(0,360):
-##        pixels = [[0,0,0] for x in range(64)]
-##        for y in range(8):
-##            pixels[y*8] = RED
-##        for x2 in range(8):
-##            pixels[(y*8)+x2] = RED
-##        pixels = drawLine(pixels, BLUE, 3, x+90)
-##        pixels = drawLine(pixels, YELLOW, 4, x)
-##        sense.set_pixels(pixels)
-##        time.sleep(0.01)
     while True:
         pixels = [[0,0,0] for x in range(64)]
-        for y in range(8):
-            pixels[y*8] = RED
-        for x2 in range(8):
-            pixels[(y*8)+x2] = RED
+
+        if selected == 0:
+            pixels = drawClock(pixels)
             
-        now = time.localtime()
-        h,m = getClockAngles(now)
-        pixels = drawLine(pixels, BLUE, 3, h)
-        pixels = drawLine(pixels, YELLOW, 4, m)
-        
-        pixels[(3*8)+4] = ORANGE
-        
         sense.set_pixels(pixels)
-        sense.mainloop()
+        
+        getInput()
+        
+        try: #Pygame sense emu
+            sense.mainloop()
+        except AttributeError: #Real sense hat or emu
+            pass
+        
         time.sleep(.1)
     
     
