@@ -6,7 +6,7 @@ X = True
 O = False
 
 RED = [255,0,0]
-BLUE = [0,255,255]
+BLUE = [0,0,255]
 BLACK = [0,0,0]
 
 images = [
@@ -99,10 +99,16 @@ def displayNumber(pixels,number,pos,colour):
 def digitalClock(pixels,screen):
     now = time.localtime()
 
+    DOT1 = 2
+    DOT2 = 4
     if screen == 1:
-        pixels = displayNumber(pixels,now.tm_min,[1,2],BLUE)
+        pixels = displayNumber(pixels,now.tm_min,[1,1],BLUE)
+        pixels[DOT1*8] = [0,255,0]
+        pixels[DOT2*8] = [0,255,0]
     else:
         pixels = displayNumber(pixels,now.tm_hour,[0,1],RED)
+        pixels[DOT1*8+7] = [0,255,0]
+        pixels[DOT2*8+7] = [0,255,0]
     return pixels
     
     
