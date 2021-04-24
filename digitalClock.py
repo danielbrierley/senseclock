@@ -2,8 +2,12 @@ import time
 from math import *
 from displayStuff import plotSmall
 
-X = [255,0,0]
-O = [0,0,0]
+X = True
+O = False
+
+RED = [255,0,0]
+BLUE = [0,255,255]
+BLACK = [0,0,0]
 
 images = [
     [#0
@@ -73,19 +77,32 @@ def addSpacers(number, length, spacer='0'):
         number = spacer+number
     return number
 
-def displayNumber(pixels,number,pos):
+def plotDigit(pixels, image, pos, size, colour):
+    for y in range(size[1]):
+        for x in range(size[0]):
+            xPos = pos[0]+x
+            yPos = pos[1]+y
+            #print(xPos,yPos)
+            if image[y*size[0]+x]:
+                pixels[yPos*8+xPos] = colour
+            else:
+                pixels[yPos*8+xPos] = BLACK
+    return pixels
+
+
+def displayNumber(pixels,number,pos,colour):
     number = addSpacers(number,2)
-    pixels = plotSmall(pixels,images[int(number[0])],[pos[0]  ,pos[1]],[3,5])
-    pixels = plotSmall(pixels,images[int(number[1])],[pos[0]+4,pos[1]],[3,5])
+    pixels = plotDigit(pixels,images[int(number[0])],[pos[0]  ,pos[1]],[3,5],colour)
+    pixels = plotDigit(pixels,images[int(number[1])],[pos[0]+4,pos[1]],[3,5],colour)
     return pixels
 
 def digitalClock(pixels,screen):
     now = time.localtime()
 
     if screen == 1:
-        pixels = displayNumber(pixels,now.tm_min,[1,2])
+        pixels = displayNumber(pixels,now.tm_min,[1,2],BLUE)
     else:
-        pixels = displayNumber(pixels,now.tm_hour,[0,1])
+        pixels = displayNumber(pixels,now.tm_hour,[0,1],RED)
     return pixels
     
     
@@ -95,7 +112,7 @@ def testDigitalClock():
     sense = SenseHat()
     for x in range(100):
         pixels = [[0,0,0] for x in range(64)]
-        pixels = displayNumber(pixels,x,[0,1])
+        pixels = displayNumber(pixels,x,[0,1],RED)
         sense.set_pixels(pixels)
         time.sleep(.1)
         #input()
