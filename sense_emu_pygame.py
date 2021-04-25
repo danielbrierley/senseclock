@@ -6,6 +6,8 @@ class SenseHat:
         self.size = size
         self.px = px
         self.stick = Stick()
+        self.temp = -20
+        self.iteration = 0
         pygame.init()
         self.screen = pygame.display.set_mode((self.size*self.px, self.size*self.px))
 
@@ -15,6 +17,8 @@ class SenseHat:
                 pygame.draw.rect(self.screen, pixels[(y*self.size)+x], (x*self.px, y*self.px, self.px, self.px))
         pygame.display.update()
 
+    def get_temperature(self):
+        return self.temp
         
 
     def mainloop(self):
@@ -24,6 +28,12 @@ class SenseHat:
                 sys.exit()
             else:
                 self.stick.addEvent(event)
+        self.iteration += 1
+        if self.iteration == 10:
+            self.iteration = 0
+            self.temp += 1
+            if self.temp == 60:
+                self.temp = -20
 
 class Stick:
     def __init__(self):

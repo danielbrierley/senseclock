@@ -4,6 +4,7 @@ from math import *
 from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
+from weather import Weather, drawTemp
 
 #TODO
 #1. Clean up and optimise drawLine()
@@ -17,10 +18,10 @@ BLACK = [0,0,0]
 RED = BLACK
 
 selected = 0
-limit = 1
+limit = 3
 
 def getInput():
-    global selected, screen, prevTime
+    global selected, screen, prevSecs
     for event in sense.stick.get_events():
         #print("The joystick was {} {}".format(event.action, event.direction))
         if event.action == 'pressed':
@@ -29,25 +30,27 @@ def getInput():
                 if selected < 0:
                     selected = limit
                 screen = 0
-                prevTime = [time.localtime().tm_sec+x for x in range(2)]
+                prevSecs = [time.localtime().tm_sec+x for x in range(2)]
                 print(selected)
             if event.direction == 'right':
                 selected += 1
                 if selected > limit:
                     selected = 0
                 screen = 0
-                prevTime = [time.localtime().tm_sec+x for x in range(2)]
+                prevSecs = [time.localtime().tm_sec+x for x in range(2)]
                 print(selected)
 
 def main():
-    global screen, maxScreen, prevTime
+    global screen, maxScreen, prevSecs
     #now = time.localtime()
     #h,m = getClockAngles(now)
     #print(h)
     #print(m)
     screen = 0
     maxScreen = 1
-    prevTime = [time.localtime().tm_sec+x for x in range(2)]
+    prevSecs = [time.localtime().tm_sec+x for x in range(2)]
+    prevMin = str(time.localtime().tm_min)[0]
+    weather = Weather()
 
     while True:
         pixels = [[0,0,0] for x in range(64)]
@@ -56,16 +59,24 @@ def main():
             pixels = drawClock(pixels)
         if selected == 1:
             pixels = digitalClock(pixels,screen)
+        if selected == 2:
+            pixels = drawTemp(pixels,weather)
+        if selected == 3:
+            pixels = drawTemp(pixels,sense)
             
         sense.set_pixels(pixels)
         
         getInput()
 
-        if not time.localtime().tm_sec in prevTime:
-            prevTime = [time.localtime().tm_sec+x for x in range(2)]
+        if not time.localtime().tm_sec in prevSecs:
+            prevSecs = [time.localtime().tm_sec+x for x in range(2)]
             screen += 1
             if screen > maxScreen:
                 screen = 0
+                
+        if not str(time.localtime().tm_min)[0] in prevMin:
+            prevMin = str(time.localtime().tm_min)[0]
+            weather.updateWeather()
         
         try: #Pygame sense emu
             sense.mainloop()
