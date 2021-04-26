@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_hat import SenseHat
+from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
@@ -50,7 +50,7 @@ def main():
     maxScreen = 1
     prevSecs = [time.localtime().tm_sec+x for x in range(2)]
     prevMin = str(time.localtime().tm_min)[0]
-    weather = Weather()
+    weather = Weather(sense)
 
     while True:
         pixels = [[0,0,0] for x in range(64)]
@@ -62,12 +62,11 @@ def main():
         if selected == 2:
             pixels = drawTemp(pixels,weather)
         if selected == 3:
-            sense.load_image('images/'+weather.icon+'.png')
+            pixels = weather.icon
         if selected == 4:
             pixels = drawTemp(pixels,sense)
 
-        if selected != 3:
-            sense.set_pixels(pixels)
+        sense.set_pixels(pixels)
         
         getInput()
 
@@ -79,7 +78,7 @@ def main():
                 
         if not str(time.localtime().tm_min)[0] in prevMin:
             prevMin = str(time.localtime().tm_min)[0]
-            weather.updateWeather()
+            weather.updateWeather(sense)
         
         try: #Pygame sense emu
             sense.mainloop()

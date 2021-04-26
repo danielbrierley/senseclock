@@ -1,4 +1,6 @@
 import pygame, sys
+from PIL import Image
+import os
 
 class SenseHat:
     
@@ -16,6 +18,18 @@ class SenseHat:
             for x in range(self.size):
                 pygame.draw.rect(self.screen, pixels[(y*self.size)+x], (x*self.px, y*self.px, self.px, self.px))
         pygame.display.update()
+
+    def load_image(self, file_path, redraw=True):
+        if not os.path.exists(file_path):
+            raise IOError('%s not found' % file_path)
+
+        img = Image.open(file_path).convert('RGB')
+        pixel_list = list(map(list, img.getdata()))
+
+        if redraw:
+            self.set_pixels(pixel_list)
+
+        return pixel_list
 
     def get_temperature(self):
         return self.temp

@@ -5,7 +5,7 @@ from displayStuff import displayNumber
 CYAN = [0,255,255]
 
 class Weather:
-    def __init__(self):
+    def __init__(self, sense):
         try:
             f = open('token.txt')
         except:
@@ -20,12 +20,12 @@ class Weather:
             else:
                 self.loc = f.read().splitlines()[0]
                 f.close()
-                self.updateWeather()
+                self.updateWeather(sense)
         
     def get_temperature(self):
         return self.temp
         
-    def updateWeather(self):
+    def updateWeather(self, sense):
         #try:
             print('Updating Weather')
             weatherUrl  = urllib.request.urlopen('http://api.openweathermap.org/data/2.5/weather?q='+self.loc+'&appid='+self.token).read()
@@ -34,7 +34,8 @@ class Weather:
         #    weatherData = None
         #else:
             #print(weatherData)
-            self.icon = weatherData['weather'][0]['icon']
+            self.iconID = weatherData['weather'][0]['icon']
+            self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
             self.temp = weatherData['main']['temp']-273.15
 
 def calcColour(temp):
