@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_emu_pygame import SenseHat
+from sense_hat import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
@@ -17,7 +17,9 @@ ORANGE = [255,127,0]
 BLACK = [0,0,0]
 RED = BLACK
 
-selected = 0
+sense = SenseHat()
+
+selected = 3
 limit = 4
 
 def getInput():
@@ -93,5 +95,4 @@ def main():
 
     
 if __name__ == '__main__':
-    sense = SenseHat()
     main()
