@@ -2,4 +2,5 @@ report.txt
 token.txt
 loc.txt
 
+*.pyc
 __pycache__/

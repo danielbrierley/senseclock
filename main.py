@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_emu_pygame import SenseHat
+from sense_hat import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
@@ -18,7 +18,7 @@ BLACK = [0,0,0]
 RED = BLACK
 
 selected = 0
-limit = 3
+limit = 4
 
 def getInput():
     global selected, screen, prevSecs
@@ -62,9 +62,12 @@ def main():
         if selected == 2:
             pixels = drawTemp(pixels,weather)
         if selected == 3:
+            sense.load_image('images/'+weather.icon+'.png')
+        if selected == 4:
             pixels = drawTemp(pixels,sense)
-            
-        sense.set_pixels(pixels)
+
+        if selected != 3:
+            sense.set_pixels(pixels)
         
         getInput()
 
