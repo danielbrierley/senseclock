@@ -35,6 +35,7 @@ class Weather:
         #else:
             #print(weatherData)
             self.iconID = weatherData['weather'][0]['icon']
+            self.iconID = '01n'
             self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
             self.temp = weatherData['main']['temp']-273.15
 
@@ -76,4 +77,5 @@ def main():
     print(weather.icon)
 
 if __name__ == '__main__':
-    main()
+    import main
+    main.main()

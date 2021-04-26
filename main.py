@@ -17,7 +17,9 @@ ORANGE = [255,127,0]
 BLACK = [0,0,0]
 RED = BLACK
 
-selected = 0
+sense = SenseHat()
+
+selected = 3
 limit = 4
 
 def getInput():
@@ -93,5 +95,4 @@ def main():
 
     
 if __name__ == '__main__':
-    sense = SenseHat()
     main()
