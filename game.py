@@ -4,20 +4,21 @@ from displayStuff import displayNumber
 
 RED = [255,0,0]
 GREEN = [0,255,0]
+GRID = 1
 
 def moveBall():
     global ball,ballVelocity,score,run
     ball = [ball[0]+ballVelocity[0], ball[1]+ballVelocity[1]]
-    if not ball[0] in range(1,7):
+    if not ball[0] in range(1,7*GRID):
         ballVelocity[0] = -ballVelocity[0]
-    if ball[1] == 0:
+    if ball[1] == 0*GRID:
         ballVelocity[1] = -ballVelocity[1]
-    if ball[1] == 6 and ball[0] in range(paddle,paddle+3):
+    if ball[1] == 6*GRID and ball[0] in range(paddle*GRID,paddle+3*GRID):
         ballVelocity[1] = -ballVelocity[1]
         score += 1
         if score == 99:
             run = False
-    if ball[1] == 7:
+    if ball[1] == 7*GRID:
         run = False
         
 
@@ -39,7 +40,7 @@ def Game(sense):
     global run,paddle,ball,ballVelocity,score
 
     paddle = 2
-    ball = [4,6]
+    ball = [4*GRID,6*GRID]
     ballVelocity = [1,-1]
     score = 0
 
@@ -52,7 +53,7 @@ def Game(sense):
     pixels[7*8+paddle+1] = RED
     pixels[7*8+paddle+2] = RED
 
-    pixels[int(ball[1])*8+int(ball[0])] = GREEN
+    pixels[(ball[1]//GRID)*8+(ball[0]//GRID)] = GREEN
         
     sense.set_pixels(pixels)
     
@@ -73,7 +74,6 @@ def Game(sense):
             sense.mainloop()
         except AttributeError: #Real sense hat or emu
             pass
-
         time.sleep(0.01)
 
     ##GAME
@@ -89,7 +89,7 @@ def Game(sense):
         pixels[7*8+paddle+1] = RED
         pixels[7*8+paddle+2] = RED
 
-        pixels[int(ball[1])*8+int(ball[0])] = GREEN
+        pixels[(ball[1]//GRID)*8+(ball[0]//GRID)] = GREEN
         
         sense.set_pixels(pixels)
         
@@ -98,7 +98,8 @@ def Game(sense):
         except AttributeError: #Real sense hat or emu
             pass
 
-        time.sleep(0.1)
+        time.sleep(0.1/GRID)
+        #print(ball)
 
     ##POSTGAME
     wait = True
