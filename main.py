@@ -41,18 +41,18 @@ def getInput(sense,weather):
                     selected = limit
                 screen = 0
                 prevSecs = [time.localtime().tm_sec+x for x in range(2)]
-                print(selected)
+                #print(selected)
             if event.direction == 'right':
                 selected += 1
                 if selected > limit:
                     selected = 0
                 screen = 0
                 prevSecs = [time.localtime().tm_sec+x for x in range(2)]
-                print(selected)
+                #print(selected)
         if event.action == 'released':
             if event.direction == 'middle':
                 if selected == 5:
-                    print('game')
+                    #print('game')
                     Game(sense)
                 if selected == 6:
                     sense.show_message('Set Location')

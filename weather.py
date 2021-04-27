@@ -25,7 +25,8 @@ class Weather:
                 self.loc = ''
             else:
                 contents = f.read().splitlines()
-                if len(contents) > 1:
+                #print(contents)
+                if len(contents) > 0:
                     self.loc = contents[0]
                 else:
                     self.loc = ''

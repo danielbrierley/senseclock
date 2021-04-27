@@ -38,7 +38,11 @@ def textInput(sense,col=[255,255,255]):
                 if event.direction == 'middle':
                     #string = string + letters[selected]
                     run = False
-        sense.mainloop()
+        
+        try: #Pygame sense emu
+            sense.mainloop()
+        except AttributeError: #Real sense hat or emu
+            pass
     return string
         
         
