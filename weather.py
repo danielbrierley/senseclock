@@ -33,10 +33,19 @@ class Weather:
         try:
             weatherUrl  = urllib.request.urlopen('http://api.openweathermap.org/data/2.5/weather?q='+urllib.parse.quote(self.loc)+'&appid='+self.token).read()
             weatherData = json.loads(weatherUrl)
+<<<<<<< HEAD
             self.weatherData = weatherData
         except urllib.error.HTTPError:
             self.code = '0'
             self.iconID = 'q'
+=======
+        #except:
+        #    weatherData = None
+        #else:
+            #print(weatherData)
+            self.iconID = weatherData['weather'][0]['icon']
+            #self.iconID = '50n'
+>>>>>>> 1f94aab1fa7060ae9c50ced58d77668999241b56
             self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
             self.temp = '??'
         else:
