@@ -14,6 +14,7 @@ class Weather:
             f = open('token.txt')
         except:
             print('No token found. Please place an OpenWeatherMap API token in token.txt')
+            self.token = ''
         else:
             self.token = f.read().splitlines()[0]
             f.close()
@@ -21,10 +22,15 @@ class Weather:
                 f = open('loc.txt')
             except:
                 print('No location found. Please place a location in loc.txt')
+                self.loc = ''
             else:
-                self.loc = f.read().splitlines()[0]
+                contents = f.read().splitlines()
+                if len(contents) > 1:
+                    self.loc = contents[0]
+                else:
+                    self.loc = ''
                 f.close()
-                self.updateWeather(sense)
+        self.updateWeather(sense)
         
     def get_temperature(self):
         return self.temp
@@ -45,6 +51,7 @@ class Weather:
             try:
                 self.code = weatherData['cod']
                 self.iconID = weatherData['weather'][0]['icon']
+                #self.iconID = '09d'
                 self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
                 self.temp = weatherData['main']['temp']-273.15
             except:
@@ -52,11 +59,13 @@ class Weather:
                     print(weatherData['cod']+': '+weatherData['message'])
                 else:
                     print(weatherData['cod'])
-                    
-                
 
-            
-            #self.iconID = '09d'
+    def updateLocation(self,loc,sense):
+        f = open('loc.txt','w')
+        f.write(loc)
+        f.close()
+        self.loc = loc
+        self.updateWeather(sense)
 
 def calcColour(temp):
     # CYAN      -> Yellow    -> RED

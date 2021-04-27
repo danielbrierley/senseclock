@@ -40,7 +40,14 @@ class SenseHat:
         text = font.render(message, True, text_colour)
         self.screen.blit(text, (0,0))
         pygame.display.update()
-        time.sleep(scroll_speed)
+        time.sleep(scroll_speed*len(message))
+
+    def show_letter(self, message, text_colour=[255, 255, 255], back_colour=[0, 0, 0]):
+        self.set_pixels([back_colour for x in range(64)], redraw=False)
+        font = pygame.font.Font(None, 500)
+        text = font.render(message, True, text_colour)
+        self.screen.blit(text, (0,0))
+        pygame.display.update()
 
     def get_temperature(self):
         return self.temp

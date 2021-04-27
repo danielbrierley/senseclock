@@ -24,7 +24,7 @@ def textInput(sense,col=[255,255,255]):
                         selected = 0
                     sense.show_letter(letters[selected],col)
                 if event.direction == 'left':
-                    if len(string) > 1:
+                    if len(string) > 0:
                         selected = letters.index(string[len(string)-1])
                         string = string[:len(string)-1]
                     sense.show_letter(letters[selected],col)
@@ -34,15 +34,17 @@ def textInput(sense,col=[255,255,255]):
                     selected = 0
                     sense.show_letter(letters[selected],col)
                     print(string)
+            if event.action == 'released':
                 if event.direction == 'middle':
                     #string = string + letters[selected]
                     run = False
+        sense.mainloop()
     return string
         
         
         
 if __name__ == '__main__':
-    from sense_hat import SenseHat
+    from sense_emu_pygame import SenseHat
     sense = SenseHat()
     print(letters)
     out = textInput(sense)

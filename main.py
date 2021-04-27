@@ -9,6 +9,7 @@ from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
 from game import Game
+from input import textInput
 
 #TODO
 #1. Clean up and optimise drawLine()
@@ -24,11 +25,12 @@ RED = BLACK
 sense = SenseHat()
 
 game = sense.load_image('images/game.png', redraw=False)
+pin = sense.load_image('images/pin.png', redraw=False)
 
-selected = 5
-limit = 5
+selected = 0
+limit = 6
 
-def getInput(sense):
+def getInput(sense,weather):
     global selected, screen, prevSecs
     for event in sense.stick.get_events():
         #print("The joystick was {} {}".format(event.action, event.direction))
@@ -52,6 +54,15 @@ def getInput(sense):
                 if selected == 5:
                     print('game')
                     Game(sense)
+                if selected == 6:
+                    sense.show_message('Set Location')
+                    sense.stick.get_events()
+                    loc = textInput(sense)
+                    weather.updateLocation(loc,sense)
+                    sense.show_message(loc)
+                    
+                    
+                    
                     
 def main():
     global screen, maxScreen, prevSecs
@@ -66,7 +77,7 @@ def main():
     weather = Weather(sense)
 
     while True:
-        getInput(sense)
+        getInput(sense,weather)
         
         pixels = [[0,0,0] for x in range(64)]
 
@@ -82,6 +93,8 @@ def main():
             pixels = drawTemp(pixels,sense)
         if selected == 5:
             pixels = game
+        if selected == 6:
+            pixels = pin
 
         sense.set_pixels(pixels)
 
