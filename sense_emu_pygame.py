@@ -1,5 +1,6 @@
 import pygame, sys
 from PIL import Image
+import time
 import os
 
 class SenseHat:
@@ -12,12 +13,14 @@ class SenseHat:
         self.iteration = 0
         pygame.init()
         self.screen = pygame.display.set_mode((self.size*self.px, self.size*self.px))
+        self._rotation = 0
 
-    def set_pixels(self, pixels):
+    def set_pixels(self, pixels, redraw=True):
         for y in range(self.size):
             for x in range(self.size):
                 pygame.draw.rect(self.screen, pixels[(y*self.size)+x], (x*self.px, y*self.px, self.px, self.px))
-        pygame.display.update()
+        if redraw:
+            pygame.display.update()
 
     def load_image(self, file_path, redraw=True):
         if not os.path.exists(file_path):
@@ -30,6 +33,14 @@ class SenseHat:
             self.set_pixels(pixel_list)
 
         return pixel_list
+
+    def show_message(self, message, scroll_speed=.1, text_colour=[255, 255, 255], back_colour=[0, 0, 0]):
+        self.set_pixels([back_colour for x in range(64)], redraw=False)
+        font = pygame.font.Font(None, 100)
+        text = font.render(message, True, text_colour)
+        self.screen.blit(text, (0,0))
+        pygame.display.update()
+        time.sleep(scroll_speed)
 
     def get_temperature(self):
         return self.temp
@@ -91,6 +102,7 @@ if __name__ == '__main__':
     pixels = [[x*4, 0, 0] for x in range(64)]
     sense = SenseHat()
     sense.set_pixels(pixels)
+    sense.show_message('Test')
     clock = pygame.time.Clock()
     while True:
         sense.mainloop()

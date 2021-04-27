@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_emu_pygame import SenseHat
+try:
+    from sense_hat import SenseHat
+except:
+    from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
