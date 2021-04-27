@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import time
 from math import *
-from sense_hat import SenseHat
+from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
 from weather import Weather, drawTemp
+from game import Game
 
 #TODO
 #1. Clean up and optimise drawLine()
@@ -19,10 +20,12 @@ RED = BLACK
 
 sense = SenseHat()
 
-selected = 3
-limit = 4
+game = sense.load_image('images/game.png', redraw=False)
 
-def getInput():
+selected = 5
+limit = 5
+
+def getInput(sense):
     global selected, screen, prevSecs
     for event in sense.stick.get_events():
         #print("The joystick was {} {}".format(event.action, event.direction))
@@ -41,7 +44,12 @@ def getInput():
                 screen = 0
                 prevSecs = [time.localtime().tm_sec+x for x in range(2)]
                 print(selected)
-
+        if event.action == 'released':
+            if event.direction == 'middle':
+                if selected == 5:
+                    print('game')
+                    Game(sense)
+                    
 def main():
     global screen, maxScreen, prevSecs
     #now = time.localtime()
@@ -55,6 +63,8 @@ def main():
     weather = Weather(sense)
 
     while True:
+        getInput(sense)
+        
         pixels = [[0,0,0] for x in range(64)]
 
         if selected == 0:
@@ -67,10 +77,10 @@ def main():
             pixels = weather.icon
         if selected == 4:
             pixels = drawTemp(pixels,sense)
+        if selected == 5:
+            pixels = game
 
         sense.set_pixels(pixels)
-        
-        getInput()
 
         if not time.localtime().tm_sec in prevSecs:
             prevSecs = [time.localtime().tm_sec+x for x in range(2)]

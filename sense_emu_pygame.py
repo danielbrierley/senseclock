@@ -70,6 +70,17 @@ class Stick:
                 self.events.append(Event('pressed','right'))
             if event.key == pygame.K_RETURN:
                 self.events.append(Event('pressed','middle'))
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                self.events.append(Event('released','up'))
+            if event.key == pygame.K_s:
+                self.events.append(Event('released','down'))
+            if event.key == pygame.K_a:
+                self.events.append(Event('released','left'))
+            if event.key == pygame.K_d:
+                self.events.append(Event('released','right'))
+            if event.key == pygame.K_RETURN:
+                self.events.append(Event('released','middle'))
                 
 class Event:
     def __init__(self, action, direction):
