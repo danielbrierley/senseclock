@@ -58,7 +58,8 @@ def getInput(sense,weather):
                     sense.show_message('Set Location')
                     sense.stick.get_events()
                     loc = textInput(sense)
-                    weather.updateLocation(loc,sense)
+                    if loc:
+                        weather.updateLocation(loc,sense)
                     sense.show_message(loc)
                     
                     
