@@ -13,6 +13,8 @@ RED = [255,0,0]
 BLUE = [0,0,255]
 ORANGE = [255,127,0]
 BLACK = [0,0,0]
+MAGENTA = [255,0,255]
+PURPLE = [150,0,255]
 RED = BLACK
 
 
@@ -56,6 +58,9 @@ def weatherSub(sense, weather):
             pixels = displayNumber(pixels,round(weather.get_humidity()),[1,1],[255,0,255])
         if selected == 2: #Pressure
             pixels = displayNumber(pixels,round(weather.get_pressure()),[1,1],[150,0,255])
+
+        for x in range(8):
+            pixels[7*8+x] = YELLOW
 
         sense.set_pixels(pixels)
         
