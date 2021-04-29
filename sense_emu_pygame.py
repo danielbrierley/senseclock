@@ -9,7 +9,7 @@ class SenseHat:
         self.size = size
         self.px = px
         self.stick = Stick()
-        self.temp = -20
+        self.increment = -20
         self.iteration = 0
         pygame.init()
         self.screen = pygame.display.set_mode((self.size*self.px, self.size*self.px))
@@ -40,7 +40,7 @@ class SenseHat:
         text = font.render(message, True, text_colour)
         self.screen.blit(text, (0,0))
         pygame.display.update()
-        time.sleep(scroll_speed*len(message))
+        time.sleep(scroll_speed*10)
 
     def show_letter(self, message, text_colour=[255, 255, 255], back_colour=[0, 0, 0]):
         self.set_pixels([back_colour for x in range(64)], redraw=False)
@@ -50,7 +50,13 @@ class SenseHat:
         pygame.display.update()
 
     def get_temperature(self):
-        return self.temp
+        return self.increment
+
+    def get_humidity(self):
+        return abs(self.increment)
+
+    def get_pressure(self):
+        return abs(self.increment)
         
 
     def mainloop(self):
@@ -63,9 +69,9 @@ class SenseHat:
         self.iteration += 1
         if self.iteration == 10:
             self.iteration = 0
-            self.temp += 1
-            if self.temp == 60:
-                self.temp = -20
+            self.increment += 1
+            if self.increment == 60:
+                self.increment = -20
 
 class Stick:
     def __init__(self):

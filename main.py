@@ -7,6 +7,7 @@ except:
     from sense_emu_pygame import SenseHat
 from clock import drawClock, testClock
 from digitalClock import digitalClock
+from weatherSub import weatherSub
 from weather import Weather, drawTemp
 from game import Game
 from input import textInput
@@ -51,10 +52,19 @@ def getInput(sense,weather):
                 #print(selected)
         if event.action == 'released':
             if event.direction == 'middle':
-                if selected == 5:
+                if selected == 2: #Weather Temperature
+                    if weather.temp == '??':
+                        sense.show_message(weather.message)
+                    else:
+                        weatherSub(sense, weather)
+                if selected == 3: #Weather Icon
+                    sense.show_message(weather.message)
+                if selected == 4: #Sense Temperature
+                    weatherSub(sense, sense)
+                if selected == 5: #Game
                     #print('game')
                     Game(sense)
-                if selected == 6:
+                if selected == 6: #Location Set
                     sense.show_message('Set Location')
                     sense.stick.get_events()
                     loc = textInput(sense)
@@ -82,19 +92,19 @@ def main():
         
         pixels = [[0,0,0] for x in range(64)]
 
-        if selected == 0:
+        if selected == 0: #Analog Clock
             pixels = drawClock(pixels)
-        if selected == 1:
+        if selected == 1: #Digital Clock
             pixels = digitalClock(pixels,screen)
-        if selected == 2:
+        if selected == 2: #Weather Temperature
             pixels = drawTemp(pixels,weather)
-        if selected == 3:
+        if selected == 3: #Weather Icon
             pixels = weather.icon
-        if selected == 4:
+        if selected == 4: #Sense Temperature
             pixels = drawTemp(pixels,sense)
-        if selected == 5:
+        if selected == 5: #Game
             pixels = game
-        if selected == 6:
+        if selected == 6: #Location Set
             pixels = pin
 
         sense.set_pixels(pixels)

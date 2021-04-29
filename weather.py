@@ -35,17 +35,22 @@ class Weather:
         
     def get_temperature(self):
         return self.temp
+    
+    def get_humidity(self):
+        return self.humidity
+    
+    def get_pressure(self):
+        return self.pressure
         
     def updateWeather(self, sense):
         try:
             weatherUrl  = urllib.request.urlopen('http://api.openweathermap.org/data/2.5/weather?q='+urllib.parse.quote(self.loc)+'&appid='+self.token).read()
             weatherData = json.loads(weatherUrl)
             self.weatherData = weatherData
-        except urllib.error.HTTPError:
+        except:# urllib.error.HTTPError:
             self.code = '0'
-            self.iconID = 'q'
-            self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
-            self.temp = '??'
+            self.setErrorVals()
+            self.message = "Couldn't Connect to Server"
         else:
             #print(weatherData)
             self.code = weatherData['cod']
@@ -55,11 +60,25 @@ class Weather:
                 #self.iconID = '09d'
                 self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
                 self.temp = weatherData['main']['temp']-273.15
+                self.humidity = weatherData['main']['humidity']
+                self.pressure = weatherData['main']['pressure']
+                self.message = self.loc
             except:
                 if 'message' in weatherData:
                     print(weatherData['cod']+': '+weatherData['message'])
+                    self.message = weatherData['cod']+': '+weatherData['message']
+                    self.setErrorVals()
                 else:
                     print(weatherData['cod'])
+                    self.message = weatherData['cod']
+                    self.setErrorVals()
+
+    def setErrorVals(self):
+        self.iconID = 'q'
+        self.icon = sense.load_image('images/'+self.iconID+'.png', redraw=False)
+        self.temp = '??'
+        self.humidity = ''
+        self.pressure = ''
 
     def updateLocation(self,loc,sense):
         f = open('loc.txt','w')
