@@ -12,9 +12,6 @@ from weather import Weather, drawTemp
 from game import Game
 from input import textInput
 
-#TODO
-#1. Clean up and optimise drawLine()
-
 
 YELLOW = [255,255,0]
 RED = [255,0,0]

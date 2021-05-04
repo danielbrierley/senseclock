@@ -76,6 +76,12 @@ numbers = [
     O,O,O,
     O,X,O]]
 
+hundred = [X,O,X,X,X,X,X,X,
+           X,O,X,O,X,X,O,X,
+           X,O,X,O,X,X,O,X,
+           X,O,X,O,X,X,O,X,
+           X,O,X,X,X,X,X,X]
+
 def addSpacers(number, length, spacer='0'):
     number = str(number)
     while len(number) < length:
@@ -98,9 +104,20 @@ def plotDigit(pixels, digit, pos, size, colour):
 
 
 def displayNumber(pixels,number,pos,colour):
-    number = addSpacers(number,2)
-    pixels = plotDigit(pixels,number[0],[pos[0]  ,pos[1]],[3,5],colour)
-    pixels = plotDigit(pixels,number[1],[pos[0]+4,pos[1]],[3,5],colour)
+    if number == 100:
+        for y in range(5):
+            for x in range(8):
+                xPos = x
+                yPos = pos[1]+y
+                #print(xPos,yPos)
+                if hundred[y*8+x]:
+                    pixels[yPos*8+xPos] = colour
+                else:
+                    pixels[yPos*8+xPos] = BLACK
+    else:
+        number = addSpacers(number,2)
+        pixels = plotDigit(pixels,number[0],[pos[0]  ,pos[1]],[3,5],colour)
+        pixels = plotDigit(pixels,number[1],[pos[0]+4,pos[1]],[3,5],colour)
     return pixels
 
 def plotSmall(pixels, image, pos, size):

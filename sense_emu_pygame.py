@@ -53,7 +53,7 @@ class SenseHat:
         return self.increment
 
     def get_humidity(self):
-        return abs(self.increment)
+        return 100#abs(self.increment)
 
     def get_pressure(self):
         return abs(self.increment)
